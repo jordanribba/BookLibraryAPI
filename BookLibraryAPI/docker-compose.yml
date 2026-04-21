@@ -1,0 +1,23 @@
+﻿services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd!
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+    
+
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=BookLibraryDB;User Id=sa;Password=YourStrong@Passw0rd!;TrustServerCertificate=True;
+    depends_on:
+      - sqlserver
+
+volumes:
+  sql_data:
